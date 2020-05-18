@@ -4,6 +4,8 @@ const config = {
     planeLeftStart: -3,
     planeTopStart: 2,
     iterations: 30,
+    juliaReal: 0.0,   // 0.353
+    juliaIm: 0.0,     // 0.288
     update: drawMandelbrot
 };
 var gui = new dat.GUI({name: 'Mandelbrot set'});
@@ -11,6 +13,11 @@ gui.add(config, 'zoom');
 gui.add(config, 'planeLeftStart');
 gui.add(config, 'planeTopStart');
 gui.add(config, 'iterations');
+
+const juliaFolder = gui.addFolder('julia set');
+juliaFolder.add(config, 'juliaReal', 0, 2, 0.001);
+juliaFolder.add(config, 'juliaIm', 0, 2, 0.001);
+
 gui.add(config, 'update');
 
 const maxWidth = window.innerWidth;
@@ -25,7 +32,13 @@ function belongsToMandelbrotSet(c){
             return i;
         }
         // z = z^2 + c
-        z = math.add(math.multiply(z, z), c)
+        if (config.juliaReal != 0 && config.juliaIm != null){
+            z = math.add(math.multiply(z,z), math.complex(config.juliaReal, config.juliaIm));
+        }else{
+            z = math.add(math.multiply(z, z), c);
+        }
+        
+        
     }
     return null;
 }
@@ -60,7 +73,7 @@ function drawMandelbrot(){
             if (n == null){
                 //drawPixel([x,y]);
             }else{
-                drawPixel([x,y], `rgba(255,0,0, ${n/30})`);
+                drawPixel([x,y], `rgba(0,0,255, ${n/30})`);
             }
         }
     }
