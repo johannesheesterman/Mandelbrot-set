@@ -21,7 +21,7 @@ function belongsToMandelbrotSet(c){
     let z = math.complex(c);
     for (let i = 0; i < config.iterations; i++) {
 
-        if (Math.sqrt(z.re * z.re + z.im * z.im) >= 2) {
+        if (Math.sqrt(z.re * z.re + z.im * z.im) >= Infinity) {
             return i;
         }
         // z = z^2 + c
