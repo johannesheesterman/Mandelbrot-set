@@ -1,23 +1,25 @@
-let maxWidth = window.innerWidth;
-let maxHeight = window.innerHeight;
-let zoom = 0.01; // distance between pixels.
-let planeLeftStart = -3;
-let planeTopStart = 2;
-let iterations = 30;
 
+const config = {
+    zoom: 0.01,
+    planeLeftStart: -3,
+    planeTopStart: 2,
+    iterations: 30,
+    update: drawMandelbrot
+};
+var gui = new dat.GUI({name: 'Mandelbrot set'});
+gui.add(config, 'zoom', 0, 1, 0.001);
+gui.add(config, 'planeLeftStart', -10, 10, 1);
+gui.add(config, 'planeTopStart', -10, 10, 1);
+gui.add(config, 'iterations', 0, 100, 1);
+gui.add(config, 'update');
 
-let canvas = document.createElement('canvas');
-canvas.width = maxWidth;
-canvas.height = maxHeight;
-document.body.appendChild(canvas);
-const context2d = canvas.getContext("2d");
-
-let first = true;
+const maxWidth = window.innerWidth;
+const maxHeight = window.innerHeight;
 
 
 function belongsToMandelbrotSet(c){
     let z = math.complex(c);
-    for (let i = 0; i < iterations; i++) {
+    for (let i = 0; i < config.iterations; i++) {
 
         if (Math.sqrt(z.re * z.re + z.im * z.im) == Infinity) {
             return false;
@@ -28,18 +30,37 @@ function belongsToMandelbrotSet(c){
     return true;
 }
 
-function drawPixel(pixel){
+function drawPixel(pixel, color = '#000000'){
+    context2d.fillStyle = color;
     context2d.fillRect(pixel[0], pixel[1], 1, 1);
 }
 
-for (let x = 0; x < maxWidth; x++){
-    for (let y = 0; y < maxHeight; y++){
-        const c = math.complex(
-            planeLeftStart + (x * zoom),
-            planeTopStart - (y * zoom)
-        );
-        if (belongsToMandelbrotSet(c)){
-            drawPixel([x,y]);
+
+let canvas = document.createElement('canvas');
+canvas.width = maxWidth;
+canvas.height = maxHeight;
+document.body.appendChild(canvas);
+const context2d = canvas.getContext("2d");
+
+function clearScreen(){
+    context2d.fillStyle = '#FFFFFF';
+    context2d.fillRect(0,0, maxWidth, maxHeight);
+}
+
+function drawMandelbrot(){
+    clearScreen();
+
+    for (let x = 0; x < maxWidth; x++){
+        for (let y = 0; y < maxHeight; y++){
+            const c = math.complex(
+                config.planeLeftStart + (x * config.zoom),
+                config.planeTopStart - (y * config.zoom)
+            );
+            if (belongsToMandelbrotSet(c)){
+                drawPixel([x,y]);
+            }
         }
     }
 }
+
+drawMandelbrot();
