@@ -7,10 +7,10 @@ const config = {
     update: drawMandelbrot
 };
 var gui = new dat.GUI({name: 'Mandelbrot set'});
-gui.add(config, 'zoom', 0, 1, 0.001);
-gui.add(config, 'planeLeftStart', -10, 10, 1);
-gui.add(config, 'planeTopStart', -10, 10, 1);
-gui.add(config, 'iterations', 0, 100, 1);
+gui.add(config, 'zoom');
+gui.add(config, 'planeLeftStart');
+gui.add(config, 'planeTopStart');
+gui.add(config, 'iterations');
 gui.add(config, 'update');
 
 const maxWidth = window.innerWidth;
