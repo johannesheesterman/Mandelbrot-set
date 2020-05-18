@@ -21,13 +21,13 @@ function belongsToMandelbrotSet(c){
     let z = math.complex(c);
     for (let i = 0; i < config.iterations; i++) {
 
-        if (Math.sqrt(z.re * z.re + z.im * z.im) == Infinity) {
-            return false;
+        if (Math.sqrt(z.re * z.re + z.im * z.im) >= 2) {
+            return i;
         }
         // z = z^2 + c
         z = math.add(math.multiply(z, z), c)
     }
-    return true;
+    return null;
 }
 
 function drawPixel(pixel, color = '#000000'){
@@ -43,7 +43,7 @@ document.body.appendChild(canvas);
 const context2d = canvas.getContext("2d");
 
 function clearScreen(){
-    context2d.fillStyle = '#FFFFFF';
+    context2d.fillStyle = '#000000';
     context2d.fillRect(0,0, maxWidth, maxHeight);
 }
 
@@ -56,8 +56,11 @@ function drawMandelbrot(){
                 config.planeLeftStart + (x * config.zoom),
                 config.planeTopStart - (y * config.zoom)
             );
-            if (belongsToMandelbrotSet(c)){
-                drawPixel([x,y]);
+            let n = belongsToMandelbrotSet(c);
+            if (n == null){
+                //drawPixel([x,y]);
+            }else{
+                drawPixel([x,y], `rgba(255,0,0, ${n/30})`);
             }
         }
     }
